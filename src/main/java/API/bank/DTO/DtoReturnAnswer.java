@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Objects;
 
+// сущность для передачи ответа от сервера, если операция не прошла
 public class DtoReturnAnswer implements Dto {
     @Expose
     @SerializedName("Key_Answer")
@@ -16,6 +17,9 @@ public class DtoReturnAnswer implements Dto {
     public DtoReturnAnswer(int keyAnswer, String descriptionKey) {
         this.keyAnswer = keyAnswer;
         this.descriptionKey = descriptionKey;
+    }
+
+    public DtoReturnAnswer() {
     }
 
     public int getKeyAnswer() {

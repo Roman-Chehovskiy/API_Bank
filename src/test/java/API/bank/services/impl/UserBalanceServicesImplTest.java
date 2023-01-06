@@ -1,20 +1,13 @@
 package API.bank.services.impl;
 
-import API.bank.DTO.Dto;
 import API.bank.DTO.DtoReturnAnswer;
-import API.bank.config.SessionFactoryConfig;
 import API.bank.entity.UserBalance;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -30,18 +23,16 @@ class UserBalanceServicesImplTest {
     void getUserIfNotId() {
         int id = 1234;
         DtoReturnAnswer returnAnswer = new DtoReturnAnswer(-1, "Неудалось найти пользователя по Id");
-        DtoReturnAnswer returnAnswerTest = (DtoReturnAnswer) userBalanceServices.getUser(id);
+        DtoReturnAnswer returnAnswerTest = (DtoReturnAnswer) userBalanceServices.getUserBalance(id);
         Assertions.assertEquals(returnAnswerTest, returnAnswer);
     }
 
     @Test
     void putMoney() {
-        int id = 12;
-        UserBalance userBalance = (UserBalance) userBalanceServices.getUser(id);
-        double balance = userBalance.getUserBalance() + 10;
+        int id = 234;
         userBalanceServices.putMoney(id, 10);
-        UserBalance userBalanceTest = (UserBalance) userBalanceServices.getUser(id);
-        Assertions.assertEquals(userBalanceTest.getUserBalance(), balance);
+        UserBalance userBalanceTest = (UserBalance) userBalanceServices.getUserBalance(id);
+        Assertions.assertEquals(165, userBalanceTest.getUserBalance());
 
     }
 
@@ -54,19 +45,43 @@ class UserBalanceServicesImplTest {
 
     @Test
     void takeMoney() {
-        int id = 12;
-        UserBalance userBalance = (UserBalance) userBalanceServices.getUser(id);
-        double balance = userBalance.getUserBalance() - 20;
+        int id = 454;
         userBalanceServices.takeMoney(id, 20);
-        UserBalance userBalanceTest = (UserBalance) userBalanceServices.getUser(id);
-        Assertions.assertEquals(userBalanceTest.getUserBalance(), balance);
+        UserBalance userBalanceTest = (UserBalance) userBalanceServices.getUserBalance(id);
+        Assertions.assertEquals(180, userBalanceTest.getUserBalance());
     }
 
     @Test
     void takeMoneyIfNotMoney() {
         DtoReturnAnswer answer = new DtoReturnAnswer(0, "Недостаточно средств");
-        DtoReturnAnswer answerTest = (DtoReturnAnswer) userBalanceServices.takeMoney(234, 100);
+        DtoReturnAnswer answerTest = (DtoReturnAnswer) userBalanceServices.takeMoney(454, 2000);
         Assertions.assertEquals(answerTest, answer);
+    }
+
+    @Test
+    void transferMoney() {
+        userBalanceServices.transferMoney(5,15, 30);
+        UserBalance userBalance = (UserBalance)userBalanceServices.getBalance(5);
+        Assertions.assertEquals(70,userBalance.getUserBalance());
+        userBalance = (UserBalance)userBalanceServices.getBalance(15);
+        Assertions.assertEquals(180,userBalance.getUserBalance());
+    }
+
+    @Test
+    void transferMoneyIfNotMoney() {
+        DtoReturnAnswer expectedAnswer = new DtoReturnAnswer(0, "Недостаточно средств");
+        DtoReturnAnswer returnAnswer = (DtoReturnAnswer)userBalanceServices.transferMoney(5, 15, 1000);
+
+        Assertions.assertEquals(expectedAnswer, returnAnswer);
+
+    }
+
+    @Test
+    void transferMoneyIfIncorrectId() {
+        DtoReturnAnswer expectedAnswer = new DtoReturnAnswer(0, "Операция не выполненна, проверьте параметры перевода");
+        DtoReturnAnswer returnAnswer = (DtoReturnAnswer)userBalanceServices.transferMoney(1, 1212, 50);
+
+        Assertions.assertEquals(expectedAnswer, returnAnswer);
     }
 
 }

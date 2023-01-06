@@ -12,4 +12,6 @@ public interface UserBalanceServices {
     Dto putMoney(int id, double money);
 
     Dto takeMoney(int id, double money);
+
+    Dto transferMoney(int senderId, int recipientId, double money);
 }

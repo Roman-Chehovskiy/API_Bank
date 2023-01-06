@@ -8,6 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.Objects;
 
+//сущность для работы с балансом пользователя
 @Table(name = "BALANCE")
 @Entity
 public class UserBalance implements Dto {
