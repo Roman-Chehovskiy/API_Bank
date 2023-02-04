@@ -5,8 +5,6 @@ import API.bank.entity.UserBalance;
 
 public interface UserBalanceServices {
 
-    void saveOrUpdate(UserBalance userBalance);
-
     Dto getBalance(int id);
 
     Dto putMoney(int id, double money);

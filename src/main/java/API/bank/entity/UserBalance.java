@@ -16,7 +16,7 @@ public class UserBalance implements Dto {
 
     private int id;
     @Expose
-    @SerializedName("identifier_user")
+   // @SerializedName("identifier_user")
     private int idUser;
     @Expose
     @SerializedName("balance_user")

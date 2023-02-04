@@ -1,16 +1,19 @@
 package API.bank.services.impl;
 
 import API.bank.DTO.DtoReturnAnswer;
+import API.bank.config.TestConfig;
 import API.bank.entity.UserBalance;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+
 
 @SpringBootTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ContextConfiguration(
+        classes = TestConfig.class)
 class UserBalanceServicesImplTest {
 
     @Autowired
@@ -23,15 +26,16 @@ class UserBalanceServicesImplTest {
     void getUserIfNotId() {
         int id = 1234;
         DtoReturnAnswer returnAnswer = new DtoReturnAnswer(-1, "Неудалось найти пользователя по Id");
-        DtoReturnAnswer returnAnswerTest = (DtoReturnAnswer) userBalanceServices.getUserBalance(id);
+        DtoReturnAnswer returnAnswerTest = (DtoReturnAnswer) userBalanceServices.getBalance(id);
         Assertions.assertEquals(returnAnswerTest, returnAnswer);
     }
+
 
     @Test
     void putMoney() {
         int id = 234;
         userBalanceServices.putMoney(id, 10);
-        UserBalance userBalanceTest = (UserBalance) userBalanceServices.getUserBalance(id);
+        UserBalance userBalanceTest = (UserBalance) userBalanceServices.getBalance(id);
         Assertions.assertEquals(165, userBalanceTest.getUserBalance());
 
     }
@@ -47,7 +51,7 @@ class UserBalanceServicesImplTest {
     void takeMoney() {
         int id = 454;
         userBalanceServices.takeMoney(id, 20);
-        UserBalance userBalanceTest = (UserBalance) userBalanceServices.getUserBalance(id);
+        UserBalance userBalanceTest = (UserBalance) userBalanceServices.getBalance(id);
         Assertions.assertEquals(180, userBalanceTest.getUserBalance());
     }
 

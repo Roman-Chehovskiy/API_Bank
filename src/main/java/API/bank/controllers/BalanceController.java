@@ -6,51 +6,51 @@ import API.bank.services.impl.UserBalanceServicesImpl;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
 @RequestMapping("/api/bank")
 public class BalanceController {
 
-    private Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     @Autowired
     private UserBalanceServicesImpl userBalanceServices;
     @Autowired
     private HistoryServiсesImpl historyServiсes;
 
 
+
     //Точка входа для получения для получения
-    @RequestMapping(value = "/getBalance/id={id}")
-    public String getBalance(@PathVariable int id) {
+    @GetMapping("/balances/{id}")
+    public Dto getBalance(@PathVariable int id) {
         Dto answer = userBalanceServices.getBalance(id);
-        return gson.toJson(answer);
+        return answer;
     }
 
     //точка входа для уменьшения баланса
-    @RequestMapping(value = "/takeMoney/id={id}&&money={money}")
-    public String takeMoney(@PathVariable int id, @PathVariable double money) {
-        return gson.toJson(userBalanceServices.takeMoney(id, money));
+    @PutMapping("/balances/take/{id}&&{money}")
+    public Dto takeMoney(@PathVariable int id, @PathVariable double money) {
+        return (userBalanceServices.takeMoney(id, money));
     }
 
     //точка входа для увеличения баланса
-    @RequestMapping(value = "/putMoney/id={id}&&money={money}")
-    public String putMoney(@PathVariable int id, @PathVariable double money) {
-        return gson.toJson(userBalanceServices.putMoney(id, money));
+    @PutMapping("/balances/put/{id}&&{money}")
+    public Dto putMoney(@PathVariable int id, @PathVariable double money) {
+        return (userBalanceServices.putMoney(id, money));
     }
 
     //точка входа для получения списка операций по заданному id
-    @RequestMapping(value = "/getOperation/id={id}&&startDate={startDateStr}&&endDate={endDateStr}")
-    public String getOperation(@PathVariable int id, @PathVariable String startDateStr, @PathVariable String endDateStr) {
-        return gson.toJson(historyServiсes.getOperation(id, startDateStr, endDateStr));
+    @GetMapping("/history/{id}&&{startDateStr}&&{endDateStr}")
+    public List<Dto> getOperation(@PathVariable int id, @PathVariable String startDateStr, @PathVariable String endDateStr) {
+        return (historyServiсes.getOperation(id, startDateStr, endDateStr));
     }
 
     //точка входа для перевода
-    @RequestMapping(value = "/transferMoney/senderId={senderId}&&recipientId={recipientId}&&money={money}")
-    public String transferMoney(@PathVariable int senderId, @PathVariable int recipientId, @PathVariable double money) {
-        return gson.toJson(userBalanceServices.transferMoney(senderId, recipientId, money));
+    @PutMapping("/balances/{senderId}&&{recipientId}&&{money}")
+    public Dto transferMoney(@PathVariable int senderId, @PathVariable int recipientId, @PathVariable double money) {
+        return (userBalanceServices.transferMoney(senderId, recipientId, money));
     }
 
 }

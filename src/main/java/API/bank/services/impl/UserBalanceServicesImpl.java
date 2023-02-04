@@ -55,7 +55,7 @@ public class UserBalanceServicesImpl implements UserBalanceServices {
     }
 
     //получаем из базы данных баланс пользователя
-    public Dto getUserBalance(int id) {
+    private Dto getUserBalance(int id) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         String sql = "select * from balance where id_user=" + id;
@@ -92,7 +92,7 @@ public class UserBalanceServicesImpl implements UserBalanceServices {
             UserBalance userBalance = (UserBalance) dto;
             userBalance.setUserBalance(userBalance.getUserBalance() + money);
             saveOrUpdate(userBalance);
-            historyServiсes.putOperation(new History(id, java.sql.Date.valueOf(formatDate.format(new Date())), "putMoney","done", money));
+            historyServiсes.putOperation(new History(id, java.sql.Date.valueOf(formatDate.format(new Date())), "putMoney", "done", money));
             Dto answer = new DtoReturnAnswer(1, "Ok");
             log.info("Баланс успешно пополнен, ID = " + id);
             return answer;
@@ -130,8 +130,7 @@ public class UserBalanceServicesImpl implements UserBalanceServices {
     }
 
     //сохраняем или обновляем баланс
-    @Override
-    public void saveOrUpdate(UserBalance userBalance) {
+    private void saveOrUpdate(UserBalance userBalance) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         session.saveOrUpdate(userBalance);
